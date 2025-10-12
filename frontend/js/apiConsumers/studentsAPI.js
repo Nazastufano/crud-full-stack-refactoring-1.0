@@ -1,6 +1,5 @@
-<?php
 /**
-*    File        : backend/routes/studentsSubjectsRoutes.php
+*    File        : frontend/js/api/studentsAPI.js
 *    Project     : CRUD PHP
 *    Author      : Tecnologías Informáticas B - Facultad de Ingeniería - UNMdP
 *    License     : http://www.gnu.org/licenses/gpl.txt  GNU GPL 3.0
@@ -9,8 +8,5 @@
 *    Iteration   : 1.0 ( prototype )
 */
 
-require_once("./config/databaseConfig.php");
-require_once("./routes/routesFactory.php");
-require_once("./controllers/studentsSubjectsController.php");
-
-routeRequest($conn);
+import { createAPI } from './apiFactory.js';
+export const studentsAPI = createAPI('students');
