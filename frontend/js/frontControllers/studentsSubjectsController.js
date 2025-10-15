@@ -12,12 +12,20 @@ import { studentsAPI } from '../apiConsumers/studentsAPI.js';
 import { subjectsAPI } from '../apiConsumers/subjectsAPI.js';
 import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
 
+//2.0
+//For pagination:
+let currentPage = 1;
+let totalPages = 1;
+const limit = 5;
+
+
 document.addEventListener('DOMContentLoaded', () => 
 {
     initSelects();
     setupFormHandler();
     setupCancelHandler();
     loadRelations();
+    setupPaginationControls();//2.0
 });
 
 async function initSelects() 
@@ -110,8 +118,12 @@ async function loadRelations()
 {
     try 
     {
-        const relations = await studentsSubjectsAPI.fetchAll();
-        
+        const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
+        const data = await studentsSubjectsAPI.fetchPaginated(currentPage, resPerPage);
+        console.log(data);
+        renderRelationsTable(data.relations);
+        totalPages = Math.ceil(data.total / resPerPage);
+        document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
         /**
          * DEBUG
          */
@@ -125,7 +137,7 @@ async function loadRelations()
          * o asegurarte de comparar el valor exactamente. 
          * Con el siguiente código se convierten todos los string approved a enteros.
          */
-        relations.forEach(rel => 
+        data.forEach(rel => 
         {
             rel.approved = Number(rel.approved);
         });
@@ -203,4 +215,32 @@ async function confirmDelete(id)
     {
         console.error('Error al borrar inscripción:', err.message);
     }
+}
+
+
+function setupPaginationControls() 
+{
+    document.getElementById('prevPage').addEventListener('click', () => 
+    {
+        if (currentPage > 1) 
+        {
+            currentPage--;
+            loadStudents();
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => 
+    {
+        if (currentPage < totalPages) 
+        {
+            currentPage++;
+            loadStudents();
+        }
+    });
+
+    document.getElementById('resultsPerPage').addEventListener('change', e => 
+    {
+        currentPage = 1;
+        loadStudents();
+    });
 }
