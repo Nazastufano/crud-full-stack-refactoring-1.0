@@ -8,6 +8,9 @@ DROP DATABASE IF EXISTS `students`;
 CREATE DATABASE `students` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `students`;
 
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'student'@'localhost';
+DROP USER IF EXISTS 'student'@'localhost';
+
 /*Crear usuario de la base de datos*/
 CREATE USER 'student'@'localhost' IDENTIFIED BY '12345';
 

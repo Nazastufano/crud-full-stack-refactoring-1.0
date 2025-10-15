@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () =>
     initSelects();
     setupFormHandler();
     setupCancelHandler();
-    loadRelations();
+    loadStudentsSubjects();
 });
 
 async function initSelects() 
@@ -131,6 +131,25 @@ async function loadRelations()
         });
         
         renderRelationsTable(relations);
+    } 
+    catch (err) 
+    {
+        console.error('Error cargando inscripciones:', err.message);
+    }
+}
+
+
+
+async function loadStudentsSubjects() 
+{
+    try 
+    {
+        const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
+        const data = await studentsSubjectsAPI.fetchPaginated(currentPage, resPerPage);
+        console.log(data);
+        renderRelationsTable(data.studentsSubjects);
+        totalPages = Math.ceil(data.total / resPerPage);
+        document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
     } 
     catch (err) 
     {
