@@ -12,12 +12,18 @@ import { studentsAPI } from '../api/studentsAPI.js';
 import { subjectsAPI } from '../api/subjectsAPI.js';
 import { studentsSubjectsAPI } from '../api/studentsSubjectsAPI.js';
 
+//2.0
+//For pagination:
+let currentPage = 1;
+let totalPages = 1;
+const limit = 5;
+
 document.addEventListener('DOMContentLoaded', () => 
 {
     initSelects();
     setupFormHandler();
     setupCancelHandler();
-    loadStudentsSubjects();
+    setupPaginationControls();
 });
 
 async function initSelects() 
@@ -222,4 +228,32 @@ async function confirmDelete(id)
     {
         console.error('Error al borrar inscripción:', err.message);
     }
+}
+
+
+function setupPaginationControls() 
+{
+    document.getElementById('prevPage').addEventListener('click', () => 
+    {
+        if (currentPage > 1) 
+        {
+            currentPage--;
+            loadStudentsSubjects();
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => 
+    {
+        if (currentPage < totalPages) 
+        {
+            currentPage++;
+            loadStudentsSubjects();
+        }
+    });
+
+    document.getElementById('resultsPerPage').addEventListener('change', e => 
+    {
+        currentPage = 1;
+        loadStudentsSubjects();
+    });
 }

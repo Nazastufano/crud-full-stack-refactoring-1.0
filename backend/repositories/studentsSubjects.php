@@ -45,7 +45,7 @@ function getPaginatedStudentsSubjects($conn, $limit, $offset)
 //2.0
 function getTotalStudentsSubjects($conn) 
 {
-    $sql = "SELECT COUNT(*) AS total FROM students";
+    $sql = "SELECT COUNT(*) AS total FROM students_subjects";
     $result = $conn->query($sql);
     return $result->fetch_assoc()['total'];
 }

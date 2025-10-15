@@ -5,16 +5,24 @@
 *    License     : http://www.gnu.org/licenses/gpl.txt  GNU GPL 3.0
 *    Date        : Mayo 2025
 *    Status      : Prototype
-*    Iteration   : 3.0 ( prototype )
+*    Iteration   : 1.0 ( prototype )
 */
 
-import { subjectsAPI } from '../api/subjectsAPI.js';
+import { subjectsAPI } from '../apiConsumers/subjectsAPI.js';
+
+//2.0
+//For pagination:
+let currentPage = 1;
+let totalPages = 1;
+const limit = 5;
+
 
 document.addEventListener('DOMContentLoaded', () => 
 {
     loadSubjects();
     setupSubjectFormHandler();
     setupCancelHandler();
+    setupPaginationControls();//2.0
 });
 
 function setupSubjectFormHandler() 
@@ -70,6 +78,23 @@ async function loadSubjects()
     catch (err)
     {
         console.error('Error cargando materias:', err.message);
+    }
+}
+
+async function loadSubjectsPag()
+{
+    try 
+    {
+        const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
+        const data = await subjectsAPI.fetchPaginated(currentPage, resPerPage);
+        console.log(data);
+        renderSubjectTable(data.subjects);
+        totalPages = Math.ceil(data.total / resPerPage);
+        document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+    } 
+    catch (err) 
+    {
+        console.error('Error cargando inscripciones:', err.message);
     }
 }
 
@@ -132,4 +157,31 @@ async function confirmDeleteSubject(id)
     {
         console.error('Error al borrar materia:', err.message);
     }
+}
+
+function setupPaginationControls() 
+{
+    document.getElementById('prevPage').addEventListener('click', () => 
+    {
+        if (currentPage > 1) 
+        {
+            currentPage--;
+            loadSubjectsPag();
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => 
+    {
+        if (currentPage < totalPages) 
+        {
+            currentPage++;
+            loadSubjectsPag();
+        }
+    });
+
+    document.getElementById('resultsPerPage').addEventListener('change', e => 
+    {
+        currentPage = 1;
+        loadSubjectsPag();
+    });
 }
