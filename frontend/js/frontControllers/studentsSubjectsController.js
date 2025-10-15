@@ -5,27 +5,19 @@
 *    License     : http://www.gnu.org/licenses/gpl.txt  GNU GPL 3.0
 *    Date        : Mayo 2025
 *    Status      : Prototype
-*    Iteration   : 1.0 ( prototype )
+*    Iteration   : 3.0 ( prototype )
 */
 
-import { studentsAPI } from '../apiConsumers/studentsAPI.js';
-import { subjectsAPI } from '../apiConsumers/subjectsAPI.js';
-import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
-
-//2.0
-//For pagination:
-let currentPage = 1;
-let totalPages = 1;
-const limit = 5;
-
+import { studentsAPI } from '../api/studentsAPI.js';
+import { subjectsAPI } from '../api/subjectsAPI.js';
+import { studentsSubjectsAPI } from '../api/studentsSubjectsAPI.js';
 
 document.addEventListener('DOMContentLoaded', () => 
 {
     initSelects();
     setupFormHandler();
     setupCancelHandler();
-    loadRelations();
-    setupPaginationControls();//2.0
+    loadStudentsSubjects();
 });
 
 async function initSelects() 
@@ -118,12 +110,8 @@ async function loadRelations()
 {
     try 
     {
-        const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
-        const data = await studentsSubjectsAPI.fetchPaginated(currentPage, resPerPage);
-        console.log(data);
-        renderRelationsTable(data.relations);
-        totalPages = Math.ceil(data.total / resPerPage);
-        document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+        const relations = await studentsSubjectsAPI.fetchAll();
+        
         /**
          * DEBUG
          */
@@ -137,12 +125,31 @@ async function loadRelations()
          * o asegurarte de comparar el valor exactamente. 
          * Con el siguiente código se convierten todos los string approved a enteros.
          */
-        data.forEach(rel => 
+        relations.forEach(rel => 
         {
             rel.approved = Number(rel.approved);
         });
         
         renderRelationsTable(relations);
+    } 
+    catch (err) 
+    {
+        console.error('Error cargando inscripciones:', err.message);
+    }
+}
+
+
+
+async function loadStudentsSubjects() 
+{
+    try 
+    {
+        const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
+        const data = await studentsSubjectsAPI.fetchPaginated(currentPage, resPerPage);
+        console.log(data);
+        renderRelationsTable(data.studentsSubjects);
+        totalPages = Math.ceil(data.total / resPerPage);
+        document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
     } 
     catch (err) 
     {
@@ -215,32 +222,4 @@ async function confirmDelete(id)
     {
         console.error('Error al borrar inscripción:', err.message);
     }
-}
-
-
-function setupPaginationControls() 
-{
-    document.getElementById('prevPage').addEventListener('click', () => 
-    {
-        if (currentPage > 1) 
-        {
-            currentPage--;
-            loadStudents();
-        }
-    });
-
-    document.getElementById('nextPage').addEventListener('click', () => 
-    {
-        if (currentPage < totalPages) 
-        {
-            currentPage++;
-            loadStudents();
-        }
-    });
-
-    document.getElementById('resultsPerPage').addEventListener('change', e => 
-    {
-        currentPage = 1;
-        loadStudents();
-    });
 }
