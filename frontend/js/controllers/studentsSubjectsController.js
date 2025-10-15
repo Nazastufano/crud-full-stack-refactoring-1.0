@@ -20,6 +20,7 @@ const limit = 5;
 
 document.addEventListener('DOMContentLoaded', () => 
 {
+    loadRelations();
     initSelects();
     setupFormHandler();
     setupCancelHandler();
@@ -111,7 +112,7 @@ function clearForm()
     document.getElementById('relationForm').reset();
     document.getElementById('relationId').value = '';
 }
-
+/*
 async function loadRelations() 
 {
     try 
@@ -130,7 +131,7 @@ async function loadRelations()
          * Se necesita convertir ese string "0" a un número real 
          * o asegurarte de comparar el valor exactamente. 
          * Con el siguiente código se convierten todos los string approved a enteros.
-         */
+         
         relations.forEach(rel => 
         {
             rel.approved = Number(rel.approved);
@@ -143,10 +144,10 @@ async function loadRelations()
         console.error('Error cargando inscripciones:', err.message);
     }
 }
+*/
 
 
-
-async function loadStudentsSubjects() 
+async function loadRelations() 
 {
     try 
     {
@@ -238,7 +239,7 @@ function setupPaginationControls()
         if (currentPage > 1) 
         {
             currentPage--;
-            loadStudentsSubjects();
+            loadRelations();
         }
     });
 
@@ -247,13 +248,13 @@ function setupPaginationControls()
         if (currentPage < totalPages) 
         {
             currentPage++;
-            loadStudentsSubjects();
+            loadRelations();
         }
     });
 
     document.getElementById('resultsPerPage').addEventListener('change', e => 
     {
         currentPage = 1;
-        loadStudentsSubjects();
+        loadRelations();
     });
 }

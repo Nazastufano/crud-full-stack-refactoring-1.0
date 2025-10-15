@@ -67,7 +67,7 @@ function setupCancelHandler()
         document.getElementById('subjectId').value = '';
     });
 }
-
+/*
 async function loadSubjects()
 {
     try
@@ -80,8 +80,8 @@ async function loadSubjects()
         console.error('Error cargando materias:', err.message);
     }
 }
-
-async function loadSubjectsPag()
+*/
+async function loadSubjects()
 {
     try 
     {
@@ -166,7 +166,7 @@ function setupPaginationControls()
         if (currentPage > 1) 
         {
             currentPage--;
-            loadSubjectsPag();
+            loadSubjects();
         }
     });
 
@@ -175,13 +175,13 @@ function setupPaginationControls()
         if (currentPage < totalPages) 
         {
             currentPage++;
-            loadSubjectsPag();
+            loadSubjects();
         }
     });
 
     document.getElementById('resultsPerPage').addEventListener('change', e => 
     {
         currentPage = 1;
-        loadSubjectsPag();
+        loadSubjects();
     });
 }
