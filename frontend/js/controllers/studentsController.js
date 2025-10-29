@@ -181,8 +181,11 @@ async function confirmDelete(id)
   
     try 
     {
-        await studentsAPI.remove(id);
-        loadStudents();
+        const res = await studentsAPI.remove(id); //recibe la respuesta y la muestra
+        if(res.materia) { //si tiene materia tira error
+            alert(`No se ha podido eliminar al estudiante, materia asociada: \n-${res.materia}`);
+        }
+        loadStudents(); 
     } 
     catch (err) 
     {
