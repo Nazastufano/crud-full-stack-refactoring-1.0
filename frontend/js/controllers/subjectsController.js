@@ -150,7 +150,10 @@ async function confirmDeleteSubject(id)
 
     try
     {
-        await subjectsAPI.remove(id);
+        const res = await subjectsAPI.remove(id);
+        if(res.estudiante){
+            alert("No se ha podido eliminar la materia, se encuentra un estudiante asociado");
+        }
         loadSubjects();
     }
     catch (err)
