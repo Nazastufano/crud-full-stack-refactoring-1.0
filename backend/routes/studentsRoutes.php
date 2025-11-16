@@ -12,24 +12,26 @@ require_once("./config/databaseConfig.php");
 require_once("./routes/routesFactory.php");
 require_once("./controllers/studentsController.php");
 
-routeRequest($conn);
+routeRequest($conn, [
+    'POST' => function($conn) {
+        $input = json_decode(file_get_contents("php://input"), true);
 
-/**
- * Ejemplo de como se extiende un archivo de rutas 
- * para casos particulares
- * o validaciones:
- */
-// routeRequest($conn, [
-//     'POST' => function($conn) 
-//     {
-//         // Validación o lógica extendida
-//         $input = json_decode(file_get_contents("php://input"), true);
-//         if (empty($input['fullname'])) 
-//         {
-//             http_response_code(400);
-//             echo json_encode(["error" => "Falta el nombre"]);
-//             return;
-//         }
-//         handlePost($conn);
-//     }
-// ]);
+        // Validar campos requeridos
+        if (empty($input['fullname']) || empty($input['email']) || !isset($input['age'])) {
+            http_response_code(400);
+            echo json_encode(["error" => "Faltan campos requeridos"]);
+            return;
+        }
+
+        // ✅ Validar que el email no exista
+        require_once("./repositories/students.php");
+        if (emailExists($conn, $input['email'])) {
+            http_response_code(409); // Conflict
+            echo json_encode(["error" => "El correo ya está registrado"]);
+            return;
+        }
+
+        // Si pasa las validaciones, delegar al controlador
+        handlePost($conn);
+    }
+]);

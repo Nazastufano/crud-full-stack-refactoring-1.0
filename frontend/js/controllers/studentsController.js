@@ -45,11 +45,9 @@ function setupFormHandler()
             clearForm();
             loadStudents();
         }
-        catch (err)
-        {
-            // Mostrar error en un modal de W3.CSS
-            const errorMessage = err.message || 'Error desconocido';
-            console.error(err.message);
+        catch (err) {
+        console.log("Error capturado:", err.message);
+        alert(err.message);
         }
     });
 }
@@ -193,9 +191,6 @@ async function confirmDelete(id)
 }
 //MUESTRA CARTEL
 function showErrorMessage(msg) {
-    // Opción 1: alert simple
-    // alert(msg);
-
     // Opción 2: Modal W3.CSS (más elegante)
     const modal = document.getElementById('errorModal') ||
         createErrorModal(); // si no existe, lo creamos

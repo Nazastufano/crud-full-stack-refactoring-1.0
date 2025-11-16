@@ -51,14 +51,6 @@ function handlePost($conn) {
         echo json_encode(["error" => "Faltan campos requeridos"]);
         return;
     }
-
-    // Validación de email único
-    if (emailExists($conn, $input['email'])) {
-        http_response_code(409); // Conflict
-        echo json_encode(["error" => "El correo ya está registrado"]);
-        return;
-    }
-
     $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
     if ($result['inserted'] > 0) {
         echo json_encode(["message" => "Estudiante agregado correctamente"]);

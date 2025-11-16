@@ -12,18 +12,33 @@ export function createAPI(moduleName, config = {})
 {
     const API_URL = config.urlOverride ?? `../../backend/server.php?module=${moduleName}`;
 
-    async function sendJSON(method, data) 
-    {
-        const res = await fetch(API_URL,
-        {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
+    async function sendJSON(method, data) {
+            const res = await fetch(API_URL, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
 
-        if (!res.ok) throw new Error(`Error en ${method}`);
-        return await res.json();
-    }
+            // Si la respuesta no es exitosa (cualquier código != 2xx)
+            if (!res.ok) {
+                let errorMessage = `Error en ${method}`;
+                try {
+                    // Intentar leer el cuerpo como JSON
+                    const errorData = await res.json();
+                    // Si contiene un campo "error", usarlo
+                    if (errorData && errorData.error) {
+                        errorMessage = errorData.error;
+                    }
+                } catch (e) {
+                    // Si no es JSON válido, mantenemos el mensaje genérico
+                }
+                // Lanzar una excepción para que el catch en el controlador la atrape
+                throw new Error(errorMessage);
+            }
+
+            // Si todo está bien, devolver los datos
+            return await res.json();
+        }
 
     return {
         async fetchAll()
