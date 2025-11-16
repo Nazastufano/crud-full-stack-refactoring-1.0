@@ -41,20 +41,18 @@ function handleGet($conn)
         echo json_encode($students);
     }
 }
-//VALIDACION EMAIL
-function handlePost($conn) {
+
+function handlePost($conn) 
+{
     $input = json_decode(file_get_contents("php://input"), true);
 
-    // Validación de campos requeridos
-    if (!isset($input['fullname']) || !isset($input['email']) || !isset($input['age'])) {
-        http_response_code(400);
-        echo json_encode(["error" => "Faltan campos requeridos"]);
-        return;
-    }
     $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
-    if ($result['inserted'] > 0) {
+    if ($result['inserted'] > 0) 
+    {
         echo json_encode(["message" => "Estudiante agregado correctamente"]);
-    } else {
+    } 
+    else 
+    {
         http_response_code(500);
         echo json_encode(["error" => "No se pudo agregar"]);
     }
