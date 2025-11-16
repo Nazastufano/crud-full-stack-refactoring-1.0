@@ -67,25 +67,18 @@ function getAllSubjectsStudents($conn)
     return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
 }
 
-function getStudentBySubjects($conn, $subject_id)
+function getAssignmentsBySubject($conn, $subject_id)
 {
-    $sql = "SELECT 
-                st.id AS student_id,
-                st.fullname,
-                st.email,
-                st.age,
-                ss.subject_id,
-                ss.approved
+    $sql = "SELECT ss.id, s.fullname AS student_name
             FROM students_subjects ss
-            JOIN students st ON ss.student_id = st.id
+            JOIN students s ON ss.student_id = s.id
             WHERE ss.subject_id = ?";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $subject_id);
     $stmt->execute();
-    $result = $stmt->get_result();
 
-    return $result->fetch_all(MYSQLI_ASSOC);
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
 
 //Query escrita con ALIAS resumidos:

@@ -76,26 +76,15 @@ function handleDelete($conn)
 {
     $input = json_decode(file_get_contents("php://input"), true);
     
-    $HayEstudianteAsociado = getStudentBySubjects($conn, $input["id"]);
-    if(empty($HayEstudianteAsociado)){
-        $result = deleteSubject($conn, $input['id']);
-        
-        if ($result['deleted'] > 0) 
-        {
-            echo json_encode(["message" => "Materia eliminada correctamente"]);
-        } 
-        else 
-        {
-            http_response_code(500);
-            echo json_encode(["error" => "No se pudo eliminar"]);
-        }
-    }else {
-        $nombrePrimerEst = $HayEstudianteAsociado[0]['fullname'];
-
-        http_response_code(202); 
-        echo json_encode(["error" => "No se puede eliminar materia con estudiante",
-                          "estudiante" => $nombrePrimerEst]);
+    $result = deleteSubject($conn, $input['id']);
+    if ($result['deleted'] > 0) 
+    {
+        echo json_encode(["message" => "Materia eliminada correctamente"]);
+    } 
+    else 
+    {
+        http_response_code(500);
+        echo json_encode(["error" => "No se pudo eliminar"]);
     }
-    
 }
 ?>

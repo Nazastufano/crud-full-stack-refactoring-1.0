@@ -146,19 +146,20 @@ function createSubjectActionsCell(subject)
 
 async function confirmDeleteSubject(id)
 {
-    if (!confirm('¿Seguro que deseas borrar esta materia?')) return;
+   if (!confirm('¿Estás seguro que deseas borrar esta materia?')) return;
 
-    try
-    {
-        const res = await subjectsAPI.remove(id);
-        if(res.estudiante){
-            alert("No se ha podido eliminar la materia, se encuentra un estudiante asociado");
-        }
+    try {
+        await subjectsAPI.remove(id);
         loadSubjects();
-    }
-    catch (err)
-    {
-        console.error('Error al borrar materia:', err.message);
+    } catch (err) {
+        console.error(err.message);
+
+
+        if (err.message) { // siempre que haya un error aparecera la ventana la materia....
+            alert("La materia no puede eliminarse porque está asignada a uno o más estudiantes.");
+        } else {
+            alert("Error inesperado al eliminar.");
+        }
     }
 }
 
