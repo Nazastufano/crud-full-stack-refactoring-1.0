@@ -47,6 +47,8 @@ function setupFormHandler()
         }
         catch (err)
         {
+            // Mostrar error en un modal de W3.CSS
+            const errorMessage = err.message || 'Error desconocido';
             console.error(err.message);
         }
     });
@@ -189,4 +191,41 @@ async function confirmDelete(id)
         console.error('Error al borrar:', err.message);
     }
 }
-  
+//MUESTRA CARTEL
+function showErrorMessage(msg) {
+    // Opción 1: alert simple
+    // alert(msg);
+
+    // Opción 2: Modal W3.CSS (más elegante)
+    const modal = document.getElementById('errorModal') ||
+        createErrorModal(); // si no existe, lo creamos
+
+    document.getElementById('errorModalContent').textContent = msg;
+    document.getElementById('errorModal').style.display = 'block';
+}
+
+function createErrorModal() {
+    const modal = document.createElement('div');
+    modal.id = 'errorModal';
+    modal.className = 'w3-modal';
+    modal.innerHTML = `
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
+            <header class="w3-container w3-red">
+                <span onclick="document.getElementById('errorModal').style.display='none'"
+                      class="w3-button w3-display-topright">&times;</span>
+                <h2>Error</h2>
+            </header>
+            <div class="w3-container">
+                <p id="errorModalContent"></p>
+            </div>
+            <footer class="w3-container w3-red">
+                <button class="w3-button w3-white"
+                        onclick="document.getElementById('errorModal').style.display='none'">
+                    Cerrar
+                </button>
+            </footer>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    return modal;
+}
