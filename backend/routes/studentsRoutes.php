@@ -15,15 +15,7 @@ require_once("./controllers/studentsController.php");
 routeRequest($conn, [
     'POST' => function($conn) {
         $input = json_decode(file_get_contents("php://input"), true);
-
-        // Validar campos requeridos
-        if (empty($input['fullname']) || empty($input['email']) || !isset($input['age'])) {
-            http_response_code(400);
-            echo json_encode(["error" => "Faltan campos requeridos"]);
-            return;
-        }
-
-        // ✅ Validar que el email no exista
+        //  Validar que el email no exista
         require_once("./repositories/students.php");
         if (emailExists($conn, $input['email'])) {
             http_response_code(409); // Conflict
