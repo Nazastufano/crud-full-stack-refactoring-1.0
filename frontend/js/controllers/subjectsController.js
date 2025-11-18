@@ -38,7 +38,18 @@ function setupSubjectFormHandler()
         };
 
         try 
-        {
+        {   
+            //validación materia unica
+            const subjects = await subjectsAPI.fetchAll();
+            const yaesta = subjects.some(
+                s => s.name.toLowerCase() === subject.name.toLowerCase() && s.id !== subject.id);
+
+            if (yaesta) {
+                alert('Nombre de materia ya existente. Por favor, elija otro nombre.');
+                return; 
+            }
+            //validación materia unica
+            
             if (subject.id) 
             {
                 await subjectsAPI.update(subject);
