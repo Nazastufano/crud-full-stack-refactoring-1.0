@@ -47,7 +47,9 @@ routeRequest($conn, [
 
         // Si pasa las validaciones, delegar al controlador
         handlePost($conn);
-    }, 'DELETE' => function($conn) 
+    }
+    /*
+    , 'DELETE' => function($conn) 
     {
         $input = json_decode(file_get_contents("php://input"), true);
         $hayMateriaAsociada = getSubjectsByStudent($conn, $input['id']); //verifico si hay materias asociadas al estudiante
@@ -61,5 +63,6 @@ routeRequest($conn, [
                             "materia" => $nombrePrimerMat]);// devuelvo el nombre de la materia
         }   
     }
+    */
 ]);
 
