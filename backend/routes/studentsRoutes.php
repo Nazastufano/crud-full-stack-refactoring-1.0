@@ -34,8 +34,7 @@ require_once("./controllers/studentsController.php");
 //     }
 // ]);
 
-routeRequest($conn, [
-    'DELETE' => function($conn) 
+routeRequest($conn, ['DELETE' => function($conn) 
     {
         $input = json_decode(file_get_contents("php://input"), true);
         $hayMateriaAsociada = getSubjectsByStudent($conn, $input['id']); //verifico si hay materias asociadas al estudiante
