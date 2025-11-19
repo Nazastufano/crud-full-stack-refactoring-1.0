@@ -10,9 +10,12 @@
 */
 
 require_once("./repositories/students.php");
+require_once("./repositories/studentsSubjects.php");
 
 // Para GET (usamos la variable superglobal $_GET):
 //https://www.php.net/manual/es/language.variables.superglobals.php
+
+
 function handleGet($conn) 
 {
     if (isset($_GET['id'])) 
@@ -53,8 +56,7 @@ function handlePost($conn)
     } 
     else 
     {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo agregar"]);
+        sendCodeMessage(500, "No se pudo agregar");
     }
 }
 
@@ -69,15 +71,13 @@ function handlePut($conn)
     } 
     else 
     {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo actualizar"]);
+        sendCodeMessage(500, "No se pudo actualizar");
     }
 }
 
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
-
     $result = deleteStudent($conn, $input['id']);
     if ($result['deleted'] > 0) 
     {
@@ -85,8 +85,7 @@ function handleDelete($conn)
     } 
     else 
     {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo eliminar"]);
+        sendCodeMessage(500, "No se pudo eliminar");
     }
 }
 ?>
