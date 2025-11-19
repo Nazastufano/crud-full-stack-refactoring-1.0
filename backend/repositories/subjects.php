@@ -45,19 +45,37 @@ function getSubjectById($conn, $id)
     return $result->fetch_assoc(); 
 }
 
+//validacion materia única
+
 function createSubject($conn, $name) 
 {
+    
+    $checkSql = "SELECT id FROM subjects WHERE LOWER(name) = LOWER(?) LIMIT 1";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->bind_param("s", $name);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
+
+    if ($checkResult->num_rows > 0) {
+        return [
+            'error' => true,
+            'message' => 'Subject already exists'
+        ];
+    }
+
     $sql = "INSERT INTO subjects (name) VALUES (?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $name);
     $stmt->execute();
 
-    return 
-    [
-        'inserted' => $stmt->affected_rows,        
+    return [
+        'error' => false,
+        'inserted' => $stmt->affected_rows,
         'id' => $conn->insert_id
     ];
 }
+
+//validacion materia única
 
 function updateSubject($conn, $id, $name) 
 {
